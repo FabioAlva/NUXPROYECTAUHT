@@ -1,6 +1,15 @@
 <script setup lang="ts">
+import type HeaderVue from '~/components/Header.vue';
+import type SiderMenuVue from '~/components/SiderMenu.vue';
+
 </script>
 <template>
-    <UPage>
-        </UPage>
+
+
+<div class="flex h-screen flex-col bg-white">
+    <Header></Header>  
+    <SiderMenu></SiderMenu>
+    
+</div>
+    
     </template>

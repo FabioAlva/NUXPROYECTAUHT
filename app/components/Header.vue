@@ -26,6 +26,7 @@ const items = computed<NavigationMenuItem[]>(() => [
 </script>
 
 <template>
+  <div>
   <UHeader>
     <template #title>
       <Logo class="h-6 w-auto" />
@@ -41,5 +42,6 @@ const items = computed<NavigationMenuItem[]>(() => [
     </template>
 
 </UHeader>
+</div>
 
 </template>
