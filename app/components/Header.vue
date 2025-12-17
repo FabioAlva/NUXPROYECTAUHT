@@ -15,7 +15,6 @@ const items = computed<NavigationMenuItem[]>(() => [
       <div class="w-full h-full flex justify-center items-center gap-1">
          <Logo />
       <UButton icon="i-heroicons-bars-3" class="bg-transparent w-[40px] h-[40px] items-center justify-center"/>
-
       </div>
   
     </template>
