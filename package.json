@@ -1,0 +1,26 @@
+{
+  "name": "Dashboard",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.2.1",
+    "@prisma/client": "^6.19.1",
+    "better-auth": "^1.4.6",
+    "nuxt": "^4.2.2",
+    "vue": "^3.5.25",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.80",
+    "@types/node": "^25.0.1",
+    "dotenv": "^17.2.3",
+    "prisma": "^6.19.1"
+  }
+}
