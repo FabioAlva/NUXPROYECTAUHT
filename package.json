@@ -12,15 +12,18 @@
   "dependencies": {
     "@nuxt/ui": "^4.2.1",
     "@prisma/client": "^6.19.1",
+    "@tailwindcss/vite": "^4.1.18",
     "better-auth": "^1.4.6",
     "nuxt": "^4.2.2",
     "vue": "^3.5.25",
-    "vue-router": "^4.6.3"
+    "vue-router": "^4.6.3",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.80",
     "@types/node": "^25.0.1",
     "dotenv": "^17.2.3",
-    "prisma": "^6.19.1"
+    "prisma": "^6.19.1",
+    "typescript": "^5.9.3"
   }
 }
