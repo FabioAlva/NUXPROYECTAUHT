@@ -2,37 +2,24 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 const route = useRoute()
 const items = computed<NavigationMenuItem[]>(() => [
-  {
-    label: 'Docs',
-    to: '/docs/getting-started',
-    active: route.path.startsWith('/docs/getting-started')
-  },
-  {
-    label: 'Components',
-    to: '/docs/components',
-    active: route.path.startsWith('/docs/components')
-  },
-  {
-    label: 'Figma',
-    to: 'https://go.nuxt.com/figma-ui',
-    target: '_blank'
-  },
-  {
-    label: 'Releases',
-    to: 'https://github.com/nuxt/ui/releases',
-    target: '_blank'
-  }
 ])
+
+
 </script>
 
 <template>
   <div>
-  <UHeader>
+  <UHeader class="bg-[var(--color-venice-blue-800)] shadow-xl z-20 border-none">
     <template #title>
-      <Logo class="h-6 w-auto" />
+      <Logo />
+      <UButton icon="i-heroicons-bars-3" class="bg-transparent"/>
     </template>
 
-    <UNavigationMenu :items="items" />
+    <UNavigationMenu :items="items" :ui="{
+      link: 'text-white hover:text-blue-700',
+      linkLeadingIcon: 'text-blue-400',
+      indicator: 'bg-blue-600'
+    }"/>
 
     <template #right>
       <UColorModeButton />

@@ -6,7 +6,7 @@ import type SiderMenuVue from '~/components/SiderMenu.vue';
 <template>
 
 
-<div class="flex h-screen flex-col bg-white">
+<div class="flex h-screen flex-col bg-gray-200">
     <Header></Header>  
     <SiderMenu></SiderMenu>
     

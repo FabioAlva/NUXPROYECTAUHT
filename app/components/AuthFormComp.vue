@@ -30,7 +30,7 @@ const props = defineProps<propsForms>()
     <UFormField 
   v-for="field in props.fields" 
   :key="field.name" 
-  :ui="{ label: 'text-[var(--color-tgi-color)]' }" 
+  :ui="{ label: 'text-[var(--color-venice-blue-800)]' }" 
   :label="field.label" 
   :name="field.name"
 >
@@ -38,7 +38,7 @@ const props = defineProps<propsForms>()
     v-model="props.state[field.name]" 
     :type="field.type"  :placeholder="field.placeholder" 
     class="w-full min-w-full" 
-    :ui="{ base: 'bg-transparent text-[var(--color-tgi-color)]' }"
+    :ui="{ base: 'bg-transparent text-[var(--color-venice-blue-800)]' }"
   />
 </UFormField>
       <UButton type="submit">

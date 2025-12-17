@@ -67,7 +67,7 @@ const onSubmit = async ({ data }: any) => {
 <template>
   <UPage>
     <div class="flex items-center h-screen bg-white">
-      <div class="hidden md:flex bg-[#005A94] h-screen w-1/2"></div>  
+      <div class="hidden md:flex bg-[var(--color-tgi-color)] h-screen w-1/2"></div>  
       <div class="flex justify-center h-screen w-full md:w-1/2 items-center">  
         <AuthFormComp 
             :fields="fields" 

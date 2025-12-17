@@ -4,6 +4,9 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const items = ref<NavigationMenuItem[][]>([
   [
     {
+      label: 'Menu'
+    },
+    {
       label: 'Guide',
       icon: 'i-lucide-book-open',
       children: [
@@ -43,8 +46,14 @@ const items = ref<NavigationMenuItem[][]>([
 
 <template>
 
- <div class="h-full bg-[var(--color-tgi-color)] flex flex-col w-[300px]">
-      <UNavigationMenu orientation="vertical" :items="items" class="data-[orientation=vertical]:w-full" />
+ <div class="h-full bg-[var(--color-venice-blue-800)] flex flex-col w-[300px]">
+      <UNavigationMenu orientation="vertical" :items="items" class="data-[orientation=vertical]:w-full" :ui="{
+      link: 'text-white hover:text-orange-700',
+      linkLeadingIcon: 'text-white',
+      indicator: 'bg-blue-600'
+    }"
+    
+    />
   </div>
 </template>
 

@@ -3,5 +3,16 @@
 
 
 @theme{
-    --color-tgi-color : #005A94
+ --color-venice-blue-50: #eff8ff;
+--color-venice-blue-100: #def1ff;
+--color-venice-blue-200: #b6e4ff;
+--color-venice-blue-300: #76cfff;
+--color-venice-blue-400: #2db8ff;
+--color-venice-blue-500: #02a0f5;
+--color-venice-blue-600: #007ed2;
+--color-venice-blue-700: #0065aa;
+--color-venice-blue-800: #005a94;
+--color-venice-blue-900: #074673;
+--color-venice-blue-950: #042d4d;
+
 }
