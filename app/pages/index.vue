@@ -15,28 +15,22 @@ useSeoMeta({
 const { signIn, fetchSession } = useAuth()
 
 const fields : AuthFormFieldsProps[] = [
+
 {
     name: 'email',
     type: 'email',
     label: 'Email',
     placeholder: 'Enter your email',
     required: true
-  }, 
-
-  {
+}, 
+{
     name: 'password',
     label: 'Password',
     type: 'password',
     placeholder: 'Enter your password',
     required: true
-  }, 
-  {
-    name: 'remember',
-    label: 'Remember me',
-    type: 'checkbox'
-  }
+}
 ]
-
 
 const state = reactive<Partial<typeof validations>>({
 })
@@ -47,9 +41,7 @@ const validations = z.object({
 })
 const onSubmit = async ({ data }: any) => {
   const { email, password, remember } = data
-  
-  // 1. Ejecutar Login
-  const { data: result, error } = await signIn.email({
+    const { data: result, error } = await signIn.email({
       email,
       password,
       rememberMe: remember,
@@ -67,7 +59,9 @@ const onSubmit = async ({ data }: any) => {
 <template>
   <UPage>
     <div class="flex items-center h-screen bg-white">
-      <div class="hidden md:flex bg-[var(--color-tgi-color)] h-screen w-1/2"></div>  
+      <div class="hidden md:flex bg-[var(--color-venice-blue-800)] h-screen w-1/2"  :style="{ 
+    backgroundImage: `linear-gradient(to bottom, rgba(30, 58, 138, 0.7), rgba(30, 58, 138, 0.7)), url('/banner.webp')` 
+   }"></div>  
       <div class="flex justify-center h-screen w-full md:w-1/2 items-center">  
         <AuthFormComp 
             :fields="fields" 

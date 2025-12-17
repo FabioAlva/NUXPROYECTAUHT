@@ -2,6 +2,11 @@
 definePageMeta({
   layout: 'dashboard-layout' // Debe coincidir con el nombre del archivo en la carpeta layouts
 })
+
+useSeoMeta({
+  title: 'Dashboard | TGIPROYECTS'
+})
+
 </script>
 
 <template>
