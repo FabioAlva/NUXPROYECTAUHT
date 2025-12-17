@@ -2,21 +2,17 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import type { AuthFormField } from '@nuxt/ui';
-import { authClient } from '../lib/auth-client'
 import type { AuthFormFieldsProps } from '~/components/AuthFormComp.vue';
 
 definePageMeta({
-//  layout: 'auth', 
-auth: {
-    only: 'guest',
-    redirectUserTo: '/dashboard',
-    redirectGuestTo: '/'
-  }
+  guestOnly: true 
 })
 
 useSeoMeta({
   title: 'Iniciar sesión | TGIPROYECTS'
 })
+
+const { signIn, fetchSession } = useAuth()
 
 const fields : AuthFormFieldsProps[] = [
 {
@@ -49,22 +45,23 @@ const validations = z.object({
   email: z.string().email('Invalid email'), // Corrección menor en sintaxis Zod
   password: z.string().min(8, 'Must be at least 8 characters')
 })
-
 const onSubmit = async ({ data }: any) => {
   const { email, password, remember } = data
-  const { data: result, error } = await authClient.signIn.email(
-    {
+  
+  // 1. Ejecutar Login
+  const { data: result, error } = await signIn.email({
       email,
       password,
       rememberMe: remember,
-      callbackURL: '/dashboard'
-    }
-  )
+    })
+  
   if (error) {
     console.error(error) 
+    return 
   }
+  await fetchSession() 
+  await navigateTo('/dashboard')
 }
-
 </script>
 
 <template>

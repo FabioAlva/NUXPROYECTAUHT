@@ -1,9 +1,16 @@
 
 <script setup lang="ts">
 
+definePageMeta({
+  guestOnly: true
+})
+
 import * as z from 'zod'
-import { authClient } from '~/lib/auth-client'
+
+
 import type { AuthFormFieldsProps } from '~/components/AuthFormComp.vue'
+
+const { signUp, fetchSession } = useAuth()
 
 const fields: AuthFormFieldsProps[] = [  
 {
@@ -36,24 +43,24 @@ const validations  = z.object({
 
 const state = reactive<Partial<typeof validations>>({
 })
-
-
 const onSubmit = async ({ data }: any) => {
-  const { email, password, name, image } = data
-  console.log(JSON.stringify(data,null,2))
-  const { data: result, error } = await authClient.signUp.email(
-    {
+  const { email, password, name } = data
+
+   const { data: result, error } = await signUp.email({ 
       email,
       password,
       name,
-      callbackURL: '/'
-    }
-  )
+     })
 
-  if (error) {
-  }
+   if (error) {
+     console.error(error.message)
+     return
+   }
 
+  await fetchSession() 
+  await navigateTo('/dashboard') 
 }
+
 
 </script>
 <template>
