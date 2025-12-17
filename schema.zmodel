@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+plugin hooks {
+    provider = '@zenstackhq/tanstack-query'
+    target = 'vue'
+    output = 'lib/hooks'
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+  authorId  String  // ⬅️ DEBE SER String
+  User      User    @relation(fields: [authorId], references: [id])
+}
+
+model User {
+  id            String    @id @default(cuid())  // ⬅️ DEBE SER String con cuid()
+  email         String    @unique
+  role          Role      @default(USER)
+  name          String?
+  Post          Post[]
+  // 2. RELACIÓN COMPLETADA:
+  projects      Project[] @relation("UserProjects")
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+// ⬇️ TUS NUEVAS POLÍTICAS
+ @@allow('create', true)
+    @@allow('read', true)
+    @@allow('update', auth() == this || auth().role == 'ADMIN') // El usuario o el Admin
+    @@allow('delete', auth().role == 'ADMIN') // Solo el Admin borra usuarios
+  @@map("user")
+}
+
+model Session {
+  id        String   @id  // ⬅️ DEBE SER String
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String   // ⬅️ DEBE SER String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id  // ⬅️ DEBE SER String
+  accountId             String    // ⬅️ DEBE SER String
+  providerId            String    // ⬅️ DEBE SER String
+  userId                String    // ⬅️ DEBE SER String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id  // ⬅️ DEBE SER String
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+
+model Project {
+    id          String   @id @default(cuid())
+    name        String
+    description String?
+    createdAt   DateTime @default(now())
+    
+    // Relación con el creador
+    ownerId     String
+// 3. RELACIÓN ENLAZADA CON EL USUARIO:
+    owner       User     @relation("UserProjects", fields: [ownerId], references: [id])
+    // POLÍTICAS DE PROYECTOS
+    // 1. Solo el dueño o el ADMIN pueden gestionar el proyecto
+    @@allow('all', auth() == owner || auth().role == 'ADMIN')
+    
+    // 2. Usuarios logueados pueden ver nombres de proyectos (opcional)
+    @@allow('read', auth() != null)
+}
