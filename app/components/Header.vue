@@ -9,10 +9,15 @@ const items = computed<NavigationMenuItem[]>(() => [
 
 <template>
   <div>
-  <UHeader class="bg-[var(--color-venice-blue-800)] shadow-xl z-20 border-none">
+  <UHeader class="bg-[var(--color-venice-blue-800)]  shadow-xl z-20 border-none"  :ui="{ 
+      container: 'max-w-full px-20'  }">
     <template #title>
-      <Logo />
-      <UButton icon="i-heroicons-bars-3" class="bg-transparent"/>
+      <div class="w-full h-full flex justify-center items-center gap-1">
+         <Logo />
+      <UButton icon="i-heroicons-bars-3" class="bg-transparent w-[40px] h-[40px] items-center justify-center"/>
+
+      </div>
+  
     </template>
 
     <UNavigationMenu :items="items" :ui="{
