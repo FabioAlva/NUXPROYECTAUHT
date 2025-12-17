@@ -1,35 +1,40 @@
-<script setup lang="ts">
-import * as z from 'zod'
-import type { AuthFormField } from '@nuxt/ui'
-import { authClient } from '~/lib/auth-client'
 
-const fields: AuthFormField[] = [  
+<script setup lang="ts">
+
+import * as z from 'zod'
+import { authClient } from '~/lib/auth-client'
+import type { AuthFormFieldsProps } from '~/components/AuthFormComp.vue'
+
+const fields: AuthFormFieldsProps[] = [  
 {
     name: 'name',
-    label: 'Full name',
+    label: 'Nombre Completo',
     type: 'text',
-    placeholder: 'Enter your full name',
-    required: true
+    placeholder: 'Ingresa tu nombre completo',
   },
   {
     name: 'email',
     type: 'email',
-    label: 'Email',
-    placeholder: 'Enter your email',
-    required: true
+    label: 'Correo Electrónico',
+    placeholder: 'Ingresa tu correo electrónico',
   },
   {
     name: 'password',
-    label: 'Password',
+    label: 'Contraseña',
     type: 'password',
-    placeholder: 'Min. 8 characters',
-    required: true
+    placeholder: 'Ingresa tu contraseña',
   },
 ]
+
+
 const validations  = z.object({
   name: z.string().min(2, 'Name is required'),
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Must be at least 8 characters'),
+})
+
+
+const state = reactive<Partial<typeof validations>>({
 })
 
 
@@ -44,8 +49,10 @@ const onSubmit = async ({ data }: any) => {
       callbackURL: '/'
     }
   )
+
   if (error) {
   }
+
 }
 
 </script>
@@ -54,7 +61,7 @@ const onSubmit = async ({ data }: any) => {
     <div class="flex h-screen bg-white">
       <div class="hidden md:flex bg-[#005A94] w-1/2" />
       <div class="flex w-full md:w-1/2 items-center justify-center">
-       <AuthFormComp :fields="fields" :validations="validations" title="Sign Up" :onSubmit="onSubmit"/>
+       <AuthFormComp :fields="fields" :validations="validations" title="Sign Up" :onSubmit="onSubmit" :state="state"/>
       </div>
     </div>
   </UPage>

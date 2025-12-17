@@ -1,0 +1,4 @@
+<template>
+    <UPage>
+        </UPage>
+    </template>
