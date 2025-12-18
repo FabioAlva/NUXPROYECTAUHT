@@ -24,18 +24,36 @@ const handleCreate = () => {
     onError: (e) => console.error(e)
   })
 }
+
+const props  = defineProps<{
+  toggleEvent: () => void
+}>()
+
+
 </script>
 
 <template>
-  <UCard class="w-[400px] h-[400px] mt-10">
+  <UCard class="w-[400px] h-[300px] ">
+    
     <template #header>
-      <h3 class="font-bold">Nuevo Proyecto</h3>
+   
+      <div class="w-full flex-row justify-between items-center flex">
+     
+        <h3 class="font-bold">Nuevo Proyecto</h3>
+      <UButton 
+        icon="i-heroicons-x-mark-20-solid" 
+        class="hover:bg-blue-200 w-[30px] h-[30px] items-center justify-center p-0"
+        @click="props.toggleEvent" />
+    
+      </div>
+
+
     </template>
 
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 w-full ">
       
       <UFormGroup label="Nombre del Proyecto">
-        <UInput v-model="projectName" placeholder="Ej: Rediseño Web" />
+        <UInput class="w-full" v-model="projectName" placeholder="Ej: Rediseño Web" />
       </UFormGroup>
 
       <UFormGroup label="Asignar Dueño (Select Normal)">
@@ -43,7 +61,7 @@ const handleCreate = () => {
         <select
           v-model="selectedUserId"
           :disabled="isLoading"
-          class="relative block w-full disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 form-input rounded-md placeholder-gray-400 dark:placeholder-gray-500 text-sm px-2.5 py-1.5 shadow-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+          class=" w-full relative block w- disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 form-input rounded-md placeholder-gray-400 dark:placeholder-gray-500 text-sm px-2.5 py-1.5 shadow-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
         >
           <option :value="undefined" disabled>Selecciona un usuario...</option>
           

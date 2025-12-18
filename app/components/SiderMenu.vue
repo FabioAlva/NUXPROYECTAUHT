@@ -19,12 +19,12 @@ const items = ref<NavigationMenuItem[][]>([
           to: "/dashboard/proyectos",
         },
         {
-          label: "Cronograma (Gantt)",
-          description: "Visualiza la línea de tiempo y dependencias.",
-          icon: "i-lucide-calendar-days",
-          to: "/dashboard/proyectos/gantt",
-        },
-      ],
+          label: 'Todos los Proyectos',
+          description: 'Visualiza la línea de tiempo y dependencias.',
+          icon: 'i-lucide-calendar-days',
+          to: '/dashboard/proyectos/AllProjects'
+        }
+      ]
     },
     {
       label: "Equipo y Recursos",
@@ -72,21 +72,17 @@ const props = defineProps({
 </script>
 
 <template>
-  <div
-    class="h-full bg-[var(--color-venice-blue-800)] flex flex-col transition-all duration-300"
-    :class="props.opened ? 'w-[300px]' : 'w-[70px]'"
-  >
-    <UNavigationMenu
-      :collapsed="!props.opened"
-      orientation="vertical"
-      :items="items"
-      class="data-[orientation=vertical]:w-full"
-      :ui="{
-        label: 'text-white hover:text-orange-700',
-        link: 'text-white hover:text-orange-700',
-        linkLeadingIcon: 'text-white',
-        indicator: 'bg-blue-600',
-      }"
+
+<div 
+  class="h-full bg-[var(--color-venice-blue-800)] flex flex-col transition-all duration-300"
+  :class="props.opened ? 'w-[300px]' : 'w-[70px]'"
+>      <UNavigationMenu :collapsed="!props.opened" orientation="vertical" :items="items" class="data-[orientation=vertical]:w-full" :ui="{
+      label: 'text-white',
+      link: 'text-white hover:text-yellow-300',
+      linkLeadingIcon: 'text-white',
+      indicator: 'bg-blue-600'
+    }"
+    
     />
   </div>
 </template>

@@ -42,8 +42,6 @@ const onDrop = (event, newStatus) => {
 }
 
 
-
-
 const isModalOpen = ref(false)
 
 const handlerOpenModal = () => {
@@ -114,7 +112,7 @@ const handlerOpenModal = () => {
     />
 </div>
 <div v-if="isModalOpen" class="fixed inset-0 w-full h-full justify-center items-center flex  z-50">
-  <modalComp v-if="isModalOpen"/>
+  <modalComp v-if="isModalOpen" :toggleEvent="handlerOpenModal"/>
 </div>
 
 </template>
