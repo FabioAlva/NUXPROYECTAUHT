@@ -29,8 +29,7 @@ const queryArgs = computed(() => {
   const where: any = {}
   if (debouncedSearch.value) {
     where.OR = [
-      { name: { contains: debouncedSearch.value, mode: 'insensitive' } },
-      { description: { contains: debouncedSearch.value, mode: 'insensitive' } }
+      { name: { contains: debouncedSearch.value } }
     ]
   }
   if (filters.status) {
