@@ -1,5 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 
+
+/**
+ * 
+ * Singleton pattern for Prisma Client
+ *  retorna un cliente de prisma 
+ * 
+ */
 const prismaClientSingleton = () => {
   return new PrismaClient()
 }

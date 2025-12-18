@@ -18,6 +18,12 @@ enum Role {
     ADMIN
 }
 
+enum ProjectStatus {
+    PENDING
+    IN_PROGRESS
+    COMPLETED
+}
+
 model Post {
   id        Int     @id @default(autoincrement())
   title     String
@@ -104,7 +110,7 @@ model Project {
     name        String
     description String?
     createdAt   DateTime @default(now())
-    
+    status      ProjectStatus @default(PENDING)
     // Relación con el creador
     ownerId     String
 // 3. RELACIÓN ENLAZADA CON EL USUARIO:

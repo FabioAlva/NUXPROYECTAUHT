@@ -17,6 +17,12 @@ enum Role {
   ADMIN
 }
 
+enum ProjectStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
 model Post {
   id        Int     @id() @default(autoincrement())
   title     String
@@ -92,10 +98,11 @@ model Verification {
 }
 
 model Project {
-  id          String   @id() @default(cuid())
+  id          String        @id() @default(cuid())
   name        String
   description String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime      @default(now())
+  status      ProjectStatus @default(PENDING)
   ownerId     String
-  owner       User     @relation("UserProjects", fields: [ownerId], references: [id])
+  owner       User          @relation("UserProjects", fields: [ownerId], references: [id])
 }

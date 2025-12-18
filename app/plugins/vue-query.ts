@@ -1,7 +1,6 @@
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  // Configuración básica del cliente
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -13,6 +12,5 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
   })
 
-  // Inyectar el plugin en Vue
   nuxtApp.vueApp.use(VueQueryPlugin, { queryClient })
 })

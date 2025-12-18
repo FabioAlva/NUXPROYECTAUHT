@@ -1,58 +1,43 @@
 
 <script setup>
-
+import { useFindManyProject , useUpdateProject} from '~~/lib/hooks'
 definePageMeta({
   layout: 'dashboard-layout' // Debe coincidir con el nombre del archivo en la carpeta layouts
 })
 
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
-const list1 = ref([
-  {
-    name: 'Joao',
-    id: '1',
-    apellido : 'Perez'
 
-  },
-  {
-    name: 'Jean',
-    id: '2'
-  },
-  {
-    name: 'Johanna',
-    id: '3'
-  },
-  {
-    name: 'Juan',
-    id: '4'
+const {data:allProjects,isloading,error} = useFindManyProject()
+const {mutate: updateProject} = useUpdateProject()
+
+const pendientesList = ref([])
+const enCursoList = ref([])
+const completadosList = ref([])
+
+watch(allProjects, () => {
+  if (allProjects.value) {
+    pendientesList.value = allProjects.value?.filter(p => p.status === 'PENDING') || []
+    enCursoList.value = allProjects.value?.filter(p => p.status === 'IN_PROGRESS') || []
+    completadosList.value = allProjects.value?.filter(p => p.status === 'COMPLETED') || []
   }
-])
 
-
-const list2 = ref(
-  list1.value.map(item => ({
-    name: `${item.name}-2`,
-    id: `${item.id}-2`
-  }))
-)
+})
 
 
 function onUpdate() {
   console.log('update')
 }
 
-
 function onAdd() {
   console.log('add')
 }
-
 
 function remove() {
   console.log('remove')
 }
 
 
-const list3 = ref([]) // Lista vacía para la tercera columna
 
 
 const OpenModal = ref(false)
@@ -60,9 +45,6 @@ const OpenModal = ref(false)
 const handlerOpenModal = () => {
   OpenModal.value = !OpenModal.value
 }
-
-
-
 
 </script>
 
@@ -75,18 +57,18 @@ const handlerOpenModal = () => {
 
     <div class="bg-gray-100 rounded-b-lg border-x border-b border-gray-200 overflow-hidden">
       <VueDraggable
-        v-model="list1"
+        v-model="pendientesList"
         group="kanban"
         animation="150"
         ghostClass="ghost"
         class="flex flex-col gap-3 p-4 h-full overflow-y-auto"
       >
         <div
-          v-for="item in list1"
+          v-for="item in pendientesList"
           :key="item.id"
           class="cursor-move bg-white shadow-sm border border-gray-200 rounded p-4 hover:shadow-md transition-shadow"
         >
-          <p class="font-bold text-gray-700">{{ item.name }} {{ item.apellido }}</p>
+          <p class="font-bold text-gray-700">{{ item.name }} </p>
           <span class="text-xs text-gray-400">ID: {{ item.id }}</span>
         </div>
       </VueDraggable>
@@ -94,14 +76,14 @@ const handlerOpenModal = () => {
 
     <div class="bg-gray-100 rounded-b-lg border-x border-b border-gray-200 overflow-hidden">
       <VueDraggable
-        v-model="list2"
+        v-model="enCursoList"
         group="kanban"
         animation="150"
         ghostClass="ghost"
         class="flex flex-col gap-3 p-4 h-full overflow-y-auto"
       >
         <div
-          v-for="item in list2"
+          v-for="item in enCursoList"
           :key="item.id"
           class="cursor-move bg-white shadow-sm border border-gray-200 rounded p-4 hover:shadow-md transition-shadow"
         >
@@ -112,14 +94,14 @@ const handlerOpenModal = () => {
 
     <div class="bg-gray-100 rounded-b-lg border-x border-b border-gray-200 overflow-hidden">
   <VueDraggable
-    v-model="list3" 
+    v-model="completadosList" 
     group="kanban"
     animation="150"
     ghostClass="ghost"
     class="flex flex-col gap-3 p-4 h-full min-h-full overflow-y-auto"
   >
     <div
-      v-for="item in list3"
+      v-for="item in completadosList"
       :key="item.id"
       class="cursor-move bg-white shadow-sm border border-gray-200 rounded p-4 hover:shadow-md transition-shadow"
     >
@@ -130,7 +112,7 @@ const handlerOpenModal = () => {
 </div>
 
 
-  </div>
+</div>
 
 <div class="fixed bottom-8 right-8 z-50">
   <UButton 
@@ -141,10 +123,6 @@ const handlerOpenModal = () => {
     @click="handlerOpenModal"
     />
 </div>
-
-
-
-
 
 </template>
 

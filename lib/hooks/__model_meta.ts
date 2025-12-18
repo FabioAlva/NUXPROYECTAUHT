@@ -286,6 +286,10 @@ const metadata: ModelMeta = {
                     name: "createdAt",
                     type: "DateTime",
                     attributes: [{ "name": "@default", "args": [{ "name": "value" }] }],
+                }, status: {
+                    name: "status",
+                    type: "ProjectStatus",
+                    attributes: [{ "name": "@default", "args": [{ "name": "value" }] }],
                 }, ownerId: {
                     name: "ownerId",
                     type: "String",
