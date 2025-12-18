@@ -17,9 +17,7 @@ const session = useState<InferSessionFromClient<BetterAuthClientOptions> | null>
 const user = useState<InferUserFromClient<BetterAuthClientOptions> | null>('auth:user', () => null)
 const sessionFetching = import.meta.server ? ref(false) : useState('auth:sessionFetching', () => false)
 
- // Dentro de useAuth.ts
 const fetchSession = async () => {
-    // Evitar llamadas duplicadas
     if (sessionFetching.value) return
     
     sessionFetching.value = true
@@ -44,6 +42,7 @@ const fetchSession = async () => {
       // SIEMPRE liberar el bloqueo, ocurra error o no
       sessionFetching.value = false
     }
+  
   }
 
 if (import.meta.client) {
