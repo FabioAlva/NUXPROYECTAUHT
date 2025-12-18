@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  // 1. Ignorar rutas explícitamente públicas
+
   if (to.meta.auth === false) {
     return
   }

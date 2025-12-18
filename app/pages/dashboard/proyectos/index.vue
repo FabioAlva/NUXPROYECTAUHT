@@ -54,15 +54,24 @@ function remove() {
 
 const list3 = ref([]) // Lista vacía para la tercera columna
 
+
+const OpenModal = ref(false)
+
+const handlerOpenModal = () => {
+  OpenModal.value = !OpenModal.value
+}
+
+
+
+
 </script>
 
 
 <template>
-  <div class="grid grid-cols-3 grid-rows-[50px_1fr] gap-4 h-full w-full p-4">
-    
-    <div class="bg-amber-400 text-white flex items-center justify-center font-bold rounded-t-lg">PENDIENTES</div>
-    <div class="bg-blue-400 text-white flex items-center justify-center font-bold rounded-t-lg">EN CURSO</div>
-    <div class="bg-emerald-400 text-white flex items-center justify-center font-bold rounded-t-lg">COMPLETADOS</div>
+  <div class="grid grid-cols-3 grid-rows-[50px_1fr] gap-4 h-full w-full p-4">  
+    <div class="bg-amber-400 text-white flex items-center justify-center font-bold ">PENDIENTES</div>
+    <div class="bg-blue-400 text-white flex items-center justify-center font-bold ">EN CURSO</div>
+    <div class="bg-emerald-400 text-white flex items-center justify-center font-bold">COMPLETADOS</div>
 
     <div class="bg-gray-100 rounded-b-lg border-x border-b border-gray-200 overflow-hidden">
       <VueDraggable
@@ -117,10 +126,26 @@ const list3 = ref([]) // Lista vacía para la tercera columna
       <p class="font-bold text-gray-700">{{ item.name }}</p>
     </div>
   </VueDraggable>
+    
 </div>
 
 
   </div>
+
+<div class="fixed bottom-8 right-8 z-50">
+  <UButton 
+    icon="i-lucide-plus" 
+    size="xl"
+    color="primary"
+    class="shadow-xl w-14 h-14 flex items-center justify-center transition-transform hover:scale-110"
+    @click="handlerOpenModal"
+    />
+</div>
+
+
+
+
+
 </template>
 
 <style scoped>
