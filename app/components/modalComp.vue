@@ -29,7 +29,7 @@ const handleCreate = () => {
 </script>
 
 <template>
-  <UCard class="w-full mt-10">
+  <UCard class="w-[400px] h-[400px] mt-10">
     <template #header>
       <h3 class="font-bold">Nuevo Proyecto</h3>
     </template>

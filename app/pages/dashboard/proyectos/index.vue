@@ -21,29 +21,33 @@ watch(allProjects, () => {
     enCursoList.value = allProjects.value?.filter(p => p.status === 'IN_PROGRESS') || []
     completadosList.value = allProjects.value?.filter(p => p.status === 'COMPLETED') || []
   }
-
 })
 
 
-function onUpdate() {
-  console.log('update')
+const onDrop = (event, newStatus) => {
+  const item = event.data
+
+  if (!item || !item.id) {
+    console.error("❌ No se pudo leer la data del evento", event)
+    return
+  }
+
+  updateProject({
+      where: { id: item.id },
+      data: { status: newStatus }
+  }, {
+      onSuccess: () => console.log('💾 Guardado exitoso en DB'),
+      onError: (e) => alert(e.message)
+  })
 }
 
-function onAdd() {
-  console.log('add')
-}
-
-function remove() {
-  console.log('remove')
-}
 
 
 
-
-const OpenModal = ref(false)
+const isModalOpen = ref(false)
 
 const handlerOpenModal = () => {
-  OpenModal.value = !OpenModal.value
+  isModalOpen.value = !isModalOpen.value
 }
 
 </script>
@@ -62,6 +66,7 @@ const handlerOpenModal = () => {
         animation="150"
         ghostClass="ghost"
         class="flex flex-col gap-3 p-4 h-full overflow-y-auto"
+        @add="(event) => onDrop(event, 'PENDING')"
       >
         <div
           v-for="item in pendientesList"
@@ -81,6 +86,7 @@ const handlerOpenModal = () => {
         animation="150"
         ghostClass="ghost"
         class="flex flex-col gap-3 p-4 h-full overflow-y-auto"
+        @add="(event) => onDrop(event, 'IN_PROGRESS')"
       >
         <div
           v-for="item in enCursoList"
@@ -99,6 +105,7 @@ const handlerOpenModal = () => {
     animation="150"
     ghostClass="ghost"
     class="flex flex-col gap-3 p-4 h-full min-h-full overflow-y-auto"
+@add="(event) => onDrop(event, 'COMPLETED')"
   >
     <div
       v-for="item in completadosList"
@@ -122,6 +129,9 @@ const handlerOpenModal = () => {
     class="shadow-xl w-14 h-14 flex items-center justify-center transition-transform hover:scale-110"
     @click="handlerOpenModal"
     />
+</div>
+<div v-if="isModalOpen" class="fixed inset-0 w-full h-full justify-center items-center flex  z-50">
+  <modalComp v-if="isModalOpen"/>
 </div>
 
 </template>

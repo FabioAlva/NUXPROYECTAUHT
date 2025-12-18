@@ -18,12 +18,6 @@ const items = ref<NavigationMenuItem[][]>([
           to: '/dashboard/proyectos'
         },
         {
-          label: 'Tablero Kanban',
-          description: 'Gestiona tareas mediante arrastrar y soltar.',
-          icon: 'i-lucide-trello',
-          to: '/dashboard/proyectos/kanban'
-        },
-        {
           label: 'Cronograma (Gantt)',
           description: 'Visualiza la línea de tiempo y dependencias.',
           icon: 'i-lucide-calendar-days',
