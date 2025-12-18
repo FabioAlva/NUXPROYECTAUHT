@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type HeaderVue from '~/components/Header.vue';
-import type SiderMenuVue from '~/components/SiderMenu.vue';
-
+    const OpenSidebar = ref(true);
+    const toggleSidebar = () => {
+        OpenSidebar.value = !OpenSidebar.value;
+    }
 </script>
 <template>
 
 <div class="flex h-screen flex-col bg-gray-200">
-    <Header></Header>  
+    <Header :toggleSidebar="toggleSidebar"></Header>  
     <div class="flex flex-row w-full h-screen">
-    <SiderMenu></SiderMenu>
+    <SiderMenu :opened="OpenSidebar"></SiderMenu>
     <div class="w-full h-full p-5">
             <slot> </slot>    
     </div>

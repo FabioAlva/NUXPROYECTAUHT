@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useFindManyUser, useCreateProject } from '../../lib/hooks'
-
-// Traemos los datos
 const { data: allUsers, isLoading } = useFindManyUser()
 const { mutate: createProject, isPending } = useCreateProject()
 
@@ -36,11 +34,6 @@ const handleCreate = () => {
 
     <div class="flex flex-col gap-4">
       
-      <div class="text-xs bg-gray-100 p-2 rounded border border-red-200 text-red-600">
-        <strong>DEBUG DATA:</strong> {{ allUsers?.length ? `Cargados ${allUsers.length} usuarios` : 'Sin datos' }}
-        <pre class="max-h-20 overflow-auto">{{ allUsers }}</pre>
-      </div>
-
       <UFormGroup label="Nombre del Proyecto">
         <UInput v-model="projectName" placeholder="Ej: Rediseño Web" />
       </UFormGroup>

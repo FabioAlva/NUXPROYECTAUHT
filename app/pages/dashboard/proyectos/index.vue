@@ -68,14 +68,7 @@ const handlerOpenModal = () => {
         class="flex flex-col gap-3 p-4 h-full overflow-y-auto"
         @add="(event) => onDrop(event, 'PENDING')"
       >
-        <div
-          v-for="item in pendientesList"
-          :key="item.id"
-          class="cursor-move bg-white shadow-sm border border-gray-200 rounded p-4 hover:shadow-md transition-shadow"
-        >
-          <p class="font-bold text-gray-700">{{ item.name }} </p>
-          <span class="text-xs text-gray-400">ID: {{ item.id }}</span>
-        </div>
+   <ItemProject :listItems="pendientesList"/>
       </VueDraggable>
     </div>
 
@@ -88,15 +81,11 @@ const handlerOpenModal = () => {
         class="flex flex-col gap-3 p-4 h-full overflow-y-auto"
         @add="(event) => onDrop(event, 'IN_PROGRESS')"
       >
-        <div
-          v-for="item in enCursoList"
-          :key="item.id"
-          class="cursor-move bg-white shadow-sm border border-gray-200 rounded p-4 hover:shadow-md transition-shadow"
-        >
-          <p class="font-bold text-gray-700">{{ item.name }}</p>
-        </div>
-      </VueDraggable>
-    </div>
+    <ItemProject :listItems="enCursoList"/>
+        </VueDraggable>
+      </div>
+
+
 
     <div class="bg-gray-100 rounded-b-lg border-x border-b border-gray-200 overflow-hidden">
   <VueDraggable
@@ -107,13 +96,7 @@ const handlerOpenModal = () => {
     class="flex flex-col gap-3 p-4 h-full min-h-full overflow-y-auto"
 @add="(event) => onDrop(event, 'COMPLETED')"
   >
-    <div
-      v-for="item in completadosList"
-      :key="item.id"
-      class="cursor-move bg-white shadow-sm border border-gray-200 rounded p-4 hover:shadow-md transition-shadow"
-    >
-      <p class="font-bold text-gray-700">{{ item.name }}</p>
-    </div>
+    <ItemProject :listItems="completadosList"/>
   </VueDraggable>
     
 </div>

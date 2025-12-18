@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import { boolean } from 'zod';
 
 const items = ref<NavigationMenuItem[][]>([
   [
@@ -62,12 +63,21 @@ const items = ref<NavigationMenuItem[][]>([
   ]
 ])
 
+const props =defineProps({
+  opened : {
+    type: Boolean,
+    default: true
+  }
+})
+
 </script>
 
 <template>
 
- <div class="h-full bg-[var(--color-venice-blue-800)] flex flex-col w-[300px]">
-      <UNavigationMenu orientation="vertical" :items="items" class="data-[orientation=vertical]:w-full" :ui="{
+<div 
+  class="h-full bg-[var(--color-venice-blue-800)] flex flex-col transition-all duration-300"
+  :class="props.opened ? 'w-[300px]' : 'w-[70px]'"
+>      <UNavigationMenu :collapsed="!props.opened" orientation="vertical" :items="items" class="data-[orientation=vertical]:w-full" :ui="{
       label: 'text-white hover:text-orange-700',
       link: 'text-white hover:text-orange-700',
       linkLeadingIcon: 'text-white',

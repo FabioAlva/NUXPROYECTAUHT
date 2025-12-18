@@ -25,7 +25,7 @@ const fetchSession = async () => {
     try {
       const { data } = await client.getSession({
         fetchOptions: {
-          headers // Importante para SSR
+          headers 
         }
       })
       
@@ -34,12 +34,10 @@ const fetchSession = async () => {
       
       return data
     } catch (error) {
-      // Si hay error, asumimos que no hay sesión
       console.error("Error en fetchSession:", error)
       session.value = null
       user.value = null
     } finally {
-      // SIEMPRE liberar el bloqueo, ocurra error o no
       sessionFetching.value = false
     }
   
