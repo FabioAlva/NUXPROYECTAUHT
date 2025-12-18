@@ -1,32 +1,63 @@
 <script setup lang="ts">
 import { h, resolveComponent } from 'vue'
+import { useFindManyProject } from '../../../../lib/hooks'
+import { refDebounced } from '@vueuse/core'
 
 definePageMeta({
   layout: 'dashboard-layout'
 })
 
-// 1. Definimos la estructura de los datos (TypeScript)
-type User = {
-  id: number
+
+type Status = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'
+
+type Projects = {
+  id: String
   name: string
-  email: string
-  role: string
-  status: 'Activo' | 'Inactivo'
+  description: string
+  status: Status
 }
 
-// 2. Resolvemos el componente UBadge para usarlo dentro de la tabla
+
+const filters = reactive({
+  search: '',
+  status: '' 
+})
+
+const debouncedSearch = refDebounced(computed(() => filters.search), 500)
+
+const queryArgs = computed(() => {
+  const where: any = {}
+  if (debouncedSearch.value) {
+    where.OR = [
+      { name: { contains: debouncedSearch.value, mode: 'insensitive' } },
+      { description: { contains: debouncedSearch.value, mode: 'insensitive' } }
+    ]
+  }
+  if (filters.status) {
+    where.status = filters.status
+  }
+  return {
+    where,
+    orderBy: { id: 'desc' as const}
+  }
+})
+
+// 4. CONSULTA A LA DB
+const { data: allProjects, isLoading } = useFindManyProject(queryArgs)
+
+// 5. MAPE DE DATOS (REEMPLAZO DEL WATCH)
+// Es mejor usar una computed que un watch para transformar datos
+const projects  = computed(() => {
+  return allProjects.value?.map(p => ({
+    id: p.id,
+    name: p.name,
+    description: p.description ?? '', 
+    status: p.status 
+  })) || []
+})
+
 const UBadge = resolveComponent('UBadge')
 
-// 3. Data de prueba (Mock Data)
-const users = ref<User[]>([
-  { id: 1, name: 'Ana García', email: 'ana.garcia@empresa.com', role: 'Admin', status: 'Activo' },
-  { id: 2, name: 'Carlos López', email: 'carlos.lopez@empresa.com', role: 'Editor', status: 'Inactivo' },
-  { id: 3, name: 'Maria Rodriguez', email: 'maria.r@empresa.com', role: 'Viewer', status: 'Activo' },
-  { id: 4, name: 'Juan Perez', email: 'juan.perez@empresa.com', role: 'Editor', status: 'Activo' },
-  { id: 5, name: 'Sofia Torres', email: 'sofia.torres@empresa.com', role: 'Viewer', status: 'Inactivo' },
-])
-
-// 4. Definición de columnas
 const columns = [
   {
     accessorKey: 'id',
@@ -35,54 +66,58 @@ const columns = [
   {
     accessorKey: 'name',
     header: 'Nombre',
-    class: 'font-medium' // Pone el nombre en negrita
+    class: 'font-medium' 
   },
   {
-    accessorKey: 'email',
-    header: 'Correo Electrónico'
+    accessorKey: 'description',
+    header: 'Descripción'
   },
-  {
-    accessorKey: 'role',
-    header: 'Rol'
-  },
-  {
-    accessorKey: 'status',
-    header: 'Estado',
-    // Función para renderizar el Badge de color
-    cell: ({ row }: { row: any }) => {
-      const status = row.getValue('status')
-      const color = status === 'Activo' ? 'green' : 'gray'
-      
-      return h(UBadge, { color, variant: 'subtle' }, () => status)
+{
+  accessorKey: 'status',
+  header: 'Estado',
+  cell: ({ row }: { row: any }) => {
+    
+    const rawStatus = row.getValue('status') as string
+    
+    const colors: Record<string, string> = {
+      'PENDING': 'error',
+      'IN_PROGRESS': 'neutral',
+      'COMPLETED': 'success'
     }
-  },
-  {
-    id: 'actions',
-    header: '' // Columna vacía para botones de acción futuros
+
+    return h(UBadge, { 
+      color: colors[rawStatus] || 'default', 
+      variant: 'solid',
+      class: 'font-bold'
+    }, () => rawStatus)
   }
+}
 ]
+
 </script>
 
 <template>
   <TabletComp 
-    title="Listado de Usuarios"
-    :data="users"
+    title="Listado de Proyectos"
+    :data="projects"
     :columns="columns"
   >
     
     <template #filters>
       
       <UInput 
+      v-model="filters.search"
         icon="i-heroicons-magnifying-glass-20-solid" 
         placeholder="Buscar..." 
         class="w-64" 
       />
       
-      <USelect 
-        :options="['Activo', 'Inactivo']" 
-        placeholder="Estado" 
-        class="w-40"
-      />
+      <select v-model="filters.status"> 
+        <option value="" disabled selected>Filtrar por estado</option>
+        <option value="PENDING">Pendiente</option>
+        <option value="IN_PROGRESS">En curso</option>
+        <option value="COMPLETED">Completado</option>
+      </select>
       
       <UButton icon="i-heroicons-arrow-down-tray" variant="ghost">
         Exportar
@@ -92,3 +127,5 @@ const columns = [
 
   </TabletComp>
 </template>
+
+
