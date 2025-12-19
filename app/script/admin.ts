@@ -18,6 +18,6 @@ async function makeAdmin(email: string) {
 }
 
 // Cambia esto por tu email
-makeAdmin("tu-email@ejemplo.com");
+makeAdmin("fabioalva@gmail.com");
 
 // -> npx tsx scripts/make-admin.ts

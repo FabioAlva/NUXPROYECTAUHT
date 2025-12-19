@@ -38,9 +38,8 @@ model User {
   @@allow('create', true)
 
   @@allow('read', true)
-  @@allow('update', auth() == this || auth().role == 'ADMIN') // El usuario o el Admin
-  @@allow('delete', auth().role == 'ADMIN') // Solo el Admin borra usuarios
-
+  @@allow('update', auth() == this || auth().role == 'admin')
+  @@allow('delete', auth().role == 'admin') 
   @@map("user")
 }
 
@@ -105,7 +104,7 @@ model Project {
     owner       User     @relation("UserProjects", fields: [ownerId], references: [id])
     // POLÍTICAS DE PROYECTOS
     // 1. Solo el dueño o el ADMIN pueden gestionar el proyecto
-    @@allow('all', auth() == owner || auth().role == 'ADMIN')
+    @@allow('all', auth() == owner || auth().role == 'admin')
     
     // 2. Usuarios logueados pueden ver nombres de proyectos (opcional)
     @@allow('read', auth() != null)

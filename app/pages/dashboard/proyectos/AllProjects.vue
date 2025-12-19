@@ -10,13 +10,6 @@ definePageMeta({
 
 type Status = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'
 
-type Projects = {
-  id: String
-  name: string
-  description: string
-  status: Status
-}
-
 
 const filters = reactive({
   search: '',
@@ -41,17 +34,14 @@ const queryArgs = computed(() => {
   }
 })
 
-// 4. CONSULTA A LA DB
 const { data: allProjects, isLoading } = useFindManyProject(queryArgs)
 
-// 5. MAPE DE DATOS (REEMPLAZO DEL WATCH)
-// Es mejor usar una computed que un watch para transformar datos
 const projects  = computed(() => {
   return allProjects.value?.map(p => ({
     id: p.id,
     name: p.name,
     description: p.description ?? '', 
-    status: p.status 
+    status : p.status 
   })) || []
 })
 
@@ -103,7 +93,12 @@ const columns = [
   >
     
     <template #filters>
-      
+      <div class="flex flex-col md:flex-row gap-4 md:items-end">
+
+        <div class="flex flex-row "> 
+
+      <label>Filtros:</label>
+    
       <UInput 
       v-model="filters.search"
         icon="i-heroicons-magnifying-glass-20-solid" 
@@ -117,10 +112,13 @@ const columns = [
         <option value="IN_PROGRESS">En curso</option>
         <option value="COMPLETED">Completado</option>
       </select>
+
+
+        </div>
       
-      <UButton icon="i-heroicons-arrow-down-tray" variant="ghost">
-        Exportar
-      </UButton>
+
+
+      </div>
 
     </template>
 
