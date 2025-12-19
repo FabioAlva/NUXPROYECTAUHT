@@ -2,6 +2,9 @@
 import type { NavigationMenuItem } from "@nuxt/ui";
 import { boolean } from "zod";
 
+const { user } = await useAuth();
+const isAdmin = computed(() => user?.value?.role === "admin");
+
 const items = ref<NavigationMenuItem[][]>([
   [
     {
@@ -30,12 +33,16 @@ const items = ref<NavigationMenuItem[][]>([
       label: "Equipo y Recursos",
       icon: "i-lucide-users",
       children: [
-        {
-          label: "Miembros",
-          description: "Asigna roles y permisos a tu equipo.",
-          icon: "i-lucide-user-plus",
-          to: "/dashboard/equipo",
-        },
+        ...(isAdmin.value
+          ? [
+              {
+                label: "Miembros",
+                description: "Asigna roles y permisos a tu equipo.",
+                icon: "i-lucide-user-plus",
+                to: "/dashboard/equipo",
+              },
+            ]
+          : []),
         {
           label: "Carga de Trabajo",
           description: "Monitorea la saturación de tareas por persona.",

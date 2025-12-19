@@ -6,16 +6,12 @@ const props = defineProps<{ listUsers: Function }>();
 
 const { client, user: currentUser } = useAuth();
 
-const schema = z.object({
-  email: z.string().email("Invalid email"), // Corrección menor en sintaxis Zod
-  password: z.string().min(8, "Must be at least 8 characters"),
-});
-
 type Schema = z.output<typeof schema>;
 
 const {
   openDialog,
   estado,
+  schema,
   state,
   roleOptions,
   cancel,
@@ -71,7 +67,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       data: {
         email: event.data.email,
         name: event.data.name,
-        role: event.data.role,
+        role: event.data.role as "user",
       },
     });
     try {
