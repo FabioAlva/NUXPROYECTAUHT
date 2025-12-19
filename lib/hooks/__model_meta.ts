@@ -8,45 +8,6 @@ import type { ModelMeta } from "@zenstackhq/runtime";
 
 const metadata: ModelMeta = {
     models: {
-        post: {
-            name: 'Post', fields: {
-                id: {
-                    name: "id",
-                    type: "Int",
-                    isId: true,
-                    attributes: [{ "name": "@default", "args": [{ "name": "value" }] }],
-                    isAutoIncrement: true,
-                }, title: {
-                    name: "title",
-                    type: "String",
-                }, content: {
-                    name: "content",
-                    type: "String",
-                    isOptional: true,
-                }, published: {
-                    name: "published",
-                    type: "Boolean",
-                    attributes: [{ "name": "@default", "args": [{ "name": "value", "value": false }] }],
-                }, authorId: {
-                    name: "authorId",
-                    type: "String",
-                    isForeignKey: true,
-                    relationField: 'User',
-                }, User: {
-                    name: "User",
-                    type: "User",
-                    isDataModel: true,
-                    backLink: 'Post',
-                    isRelationOwner: true,
-                    foreignKeyMapping: { "id": "authorId" },
-                },
-            }, uniqueConstraints: {
-                id: {
-                    name: "id",
-                    fields: ["id"]
-                },
-            },
-        },
         user: {
             name: 'User', fields: {
                 id: {
@@ -59,18 +20,12 @@ const metadata: ModelMeta = {
                     type: "String",
                 }, role: {
                     name: "role",
-                    type: "Role",
-                    attributes: [{ "name": "@default", "args": [{ "name": "value" }] }],
+                    type: "String",
+                    isOptional: true,
                 }, name: {
                     name: "name",
                     type: "String",
                     isOptional: true,
-                }, Post: {
-                    name: "Post",
-                    type: "Post",
-                    isDataModel: true,
-                    isArray: true,
-                    backLink: 'User',
                 }, projects: {
                     name: "projects",
                     type: "Project",
@@ -81,10 +36,6 @@ const metadata: ModelMeta = {
                     name: "emailVerified",
                     type: "Boolean",
                     attributes: [{ "name": "@default", "args": [{ "name": "value", "value": false }] }],
-                }, image: {
-                    name: "image",
-                    type: "String",
-                    isOptional: true,
                 }, createdAt: {
                     name: "createdAt",
                     type: "DateTime",
@@ -93,6 +44,19 @@ const metadata: ModelMeta = {
                     name: "updatedAt",
                     type: "DateTime",
                     attributes: [{ "name": "@updatedAt", "args": [] }],
+                }, banned: {
+                    name: "banned",
+                    type: "Boolean",
+                    isOptional: true,
+                    attributes: [{ "name": "@default", "args": [{ "name": "value", "value": false }] }],
+                }, banReason: {
+                    name: "banReason",
+                    type: "String",
+                    isOptional: true,
+                }, banExpires: {
+                    name: "banExpires",
+                    type: "DateTime",
+                    isOptional: true,
                 }, sessions: {
                     name: "sessions",
                     type: "Session",

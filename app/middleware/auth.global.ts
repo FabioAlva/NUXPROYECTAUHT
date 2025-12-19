@@ -1,35 +1,35 @@
-
 export default defineNuxtRouteMiddleware(async (to) => {
-  
   if (to.meta.auth === false) {
-    return
+    return;
   }
- 
-  const { loggedIn, fetchSession, session, user } = useAuth()
- 
-  console.log(`[Middleware] Navegando a: ${to.path}`)
- 
+
+  const { loggedIn, fetchSession, session, user, client } = useAuth();
+
+  console.log(`[Middleware] Navegando a: ${to.path}`);
+
   if (!session.value) {
     try {
-      await fetchSession()
+      await fetchSession();
     } catch (e) {
-      console.error('[Middleware] Error fetching session:', e)
+      console.error("[Middleware] Error fetching session:", e);
     }
   }
-  console.log(`[Middleware] Estado -> LoggedIn: ${loggedIn.value}, User: ${user.value?.email}`) 
+  console.log(
+    `[Middleware] Estado -> LoggedIn: ${loggedIn.value}, User: ${user.value?.email}}`
+  );
   if (!loggedIn.value) {
     if (to.meta.guestOnly) {
-      return
+      return;
     }
-    console.log('[Middleware] Acceso denegado. Redirigiendo a /')
-    return navigateTo('/')
+    console.log("[Middleware] Acceso denegado. Redirigiendo a /");
+    return navigateTo("/");
   }
 
   if (loggedIn.value) {
     if (to.meta.guestOnly) {
-      console.log('[Middleware] Ya logueado. Redirigiendo a /dashboard')
-      return navigateTo('/dashboard')
+      console.log("[Middleware] Ya logueado. Redirigiendo a /dashboard");
+      return navigateTo("/dashboard");
     }
-    return
+    return;
   }
-})
+});

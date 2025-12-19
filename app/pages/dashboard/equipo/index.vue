@@ -10,9 +10,24 @@ const UDropdownMenu = resolveComponent("UDropdownMenu");
 const UCheckbox = resolveComponent("UCheckbox");
 const UInput = resolveComponent("UInput");
 const UBadge = resolveComponent("UBadge");
-const UAvatar = resolveComponent("UAvatar");
+const USwitch = resolveComponent("USwitch");
 
 const toast = useToast();
+const { client, user: currentUser } = useAuth();
+const {
+  openDialog,
+  estado,
+  state,
+  users,
+  pagination,
+  DataEditUser,
+  rowSelection,
+  statusFilter,
+  columnFilters,
+  getRowItems,
+  totalUsers,
+  roleOptions,
+} = useAddModal();
 
 const selectedRows = ref<User[]>([]);
 const table = ref(); // Referencia a la tabla
@@ -21,63 +36,17 @@ const open = ref(false);
 const openEdit = ref(false); // Nuevo: para el modal de edición
 
 type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: string;
-  created_at: string;
+  banned: boolean;
 };
-
-const data = ref<User[]>([
-  {
-    id: 1,
-    name: "Gaston Alvarez",
-    email: "ga@gmial.com",
-    role: "admin",
-    created_at: "2024-01-15",
-  },
-  {
-    id: 1,
-    name: "Gaston Alvarez",
-    email: "zzzzzz@gmial.com",
-    role: "admin",
-    created_at: "2024-01-15",
-  },
-  {
-    id: 1,
-    name: "Gaston Alvarez",
-    email: "ssssss@gmial.com",
-    role: "admin",
-    created_at: "2024-01-15",
-  },
-]);
 
 const columns: TableColumn<User>[] = [
   {
-    id: "select",
-    header: ({ table }) =>
-      h(UCheckbox, {
-        modelValue: table.getIsSomePageRowsSelected()
-          ? "indeterminate"
-          : table.getIsAllPageRowsSelected(),
-        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
-          table.toggleAllPageRowsSelected(!!value),
-        "aria-label": "Select all",
-      }),
-    cell: ({ row }) =>
-      h(UCheckbox, {
-        modelValue: row.getIsSelected(),
-        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
-          row.toggleSelected(!!value),
-        "aria-label": "Select row",
-      }),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => row.original.name,
+    header: "Nombre",
   },
   {
     accessorKey: "email",
@@ -85,7 +54,7 @@ const columns: TableColumn<User>[] = [
       const isSorted = column.getIsSorted();
 
       return h(UButton, {
-        color: "neutral",
+        color: "white",
         variant: "ghost",
         label: "Email",
         icon: isSorted
@@ -93,35 +62,65 @@ const columns: TableColumn<User>[] = [
             ? "i-lucide-arrow-up-narrow-wide"
             : "i-lucide-arrow-down-wide-narrow"
           : "i-lucide-arrow-up-down",
-        class: "-mx-2.5",
+        class: "-mx-2.5 hover:bg-[var(--color-venice-blue-900)]",
         onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
       });
     },
-    cell: ({ row }) => row.original.email,
   },
   {
     accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => row.original.role,
+    header: "Rol",
   },
   {
-    accessorKey: "created_at",
-    header: "Created At",
-    cell: ({ row }) => row.original.created_at,
+    accessorKey: "status",
+    header: "Estado",
+    cell: ({ row }) => {
+      const normalizeToBool = (v: unknown) => Number(v) === 0;
+      const boolToNumber = (b: boolean) => (b ? 0 : 1);
+
+      async function handleToggle(value: boolean) {
+        row.original.banned = boolToNumber(value) as any;
+        try {
+          await client.admin.updateUser({
+            userId: row.original.id,
+            data: { banned: Boolean(row.original.banned) },
+          });
+          toast.add({
+            title: "Actualizado",
+            description: `Estado de ${row.original.name} actualizado correctamente`,
+            color: "success",
+          });
+        } catch (error) {
+          toast.add({
+            title: "Error",
+            description: `No se pudo actualizar el estado`,
+            color: "error",
+          });
+          row.original.banned = boolToNumber(!value) as any;
+        }
+      }
+
+      return h("div", { class: "flex items-center justify-center gap-3" }, [
+        h(USwitch, {
+          modelValue: normalizeToBool(row.original.banned),
+          "onUpdate:modelValue": handleToggle,
+          disabled: row.original.id === currentUser.value?.id,
+        }),
+      ]);
+    },
   },
   {
     id: "actions",
-    header: "Actions",
+    header: "Acciones",
     cell: ({ row }) => {
-      return h("div", { class: "flex gap-2" }, [
+      return h("div", { class: "flex justify-center gap-2" }, [
         h(UButton, {
           icon: "i-heroicons-pencil-square",
           size: "sm",
           color: "primary",
           variant: "ghost",
           onClick: () => {
-            console.log("Delete", row.original.id);
-            open.value = true;
+            DataEditUser(row.original);
           },
         }),
         h(UButton, {
@@ -133,93 +132,124 @@ const columns: TableColumn<User>[] = [
         }),
       ]);
     },
-    enableSorting: false,
   },
 ];
-// Nuevo: función para abrir el modal de edición
-const openEditModal = (user: User) => {
-  editingUser.value = { ...user }; // Clonar el usuario para no modificar el original
-  openEdit.value = true;
-};
 
-// Nuevo: función para guardar los cambios
-const saveChanges = () => {
-  console.log(data.value);
-  if (editingUser.value) {
-    const index = data.value.findIndex((u) => u.id === editingUser.value!.id);
+watch(
+  () => statusFilter.value,
+  (newVal) => {
+    if (!table?.value?.tableApi) return;
 
-    if (index !== -1) {
-      data.value[index] = { ...editingUser.value };
-      toast.add({
-        title: "Success",
-        description: "User updated successfully",
-      });
+    const statusColumn = table.value.tableApi.getColumn("status");
+    if (!statusColumn) return;
+
+    if (newVal === "all") {
+      statusColumn.setFilterValue(undefined);
+    } else {
+      statusColumn.setFilterValue(newVal);
     }
   }
-  openEdit.value = false;
-  editingUser.value = null;
-};
+);
+
+// Nuevo: función para guardar los cambios
+
+// safasf
+
+async function handlePageChange(newPageIndex: number) {
+  pagination.value.pageIndex = newPageIndex - 1;
+  const { users: u, total } = await listUsers(
+    pagination.value.pageIndex,
+    pagination.value.pageSize
+  );
+  users.value = u;
+  totalUsers.value = total;
+}
+
+async function listUsers(pageIndex = 0, pageSize = 14) {
+  const { data } = await client.admin.listUsers({
+    query: {
+      limit: pageSize,
+      offset: pageIndex * pageSize,
+      sortBy: "createdAt",
+    },
+  });
+  return {
+    users:
+      data?.users.map((u) => {
+        return {
+          ...u,
+          role: roleOptions.find((r) => r.value === u.role)?.label,
+          banned: Number(u.banned),
+        };
+      }) ?? [],
+    total: data?.total ?? 0,
+  };
+}
+
+onMounted(async () => {
+  console.log("Usuario actual:", currentUser.value);
+
+  if (!users.value.length) {
+    const { users: u, total } = await listUsers(
+      pagination.value.pageIndex,
+      pagination.value.pageSize
+    );
+    users.value = u;
+    totalUsers.value = total;
+  }
+});
 </script>
 
 <template>
   <div class="flex-1 divide-y divide-accented w-full">
     <div class="flex items-center gap-2 px-4 py-3.5 overflow-x-auto">
       <UInput
-        placeholder="Filter emails..."
-        :model-value="(table?.tableApi.getColumn('email')?.getFilterValue() as string)"
+        icon="i-heroicons-magnifying-glass-20-solid"
+        placeholder="Búsqueda por nombre"
+        :model-value="(table?.tableApi.getColumn('name')?.getFilterValue() as string)"
         @update:model-value="
-          table?.tableApi.getColumn('email')?.setFilterValue($event)
+          table?.tableApi.getColumn('name')?.setFilterValue($event)
         "
       />
 
-      <UDropdownMenu>
-        <UButton
-          label="Columns"
-          color="neutral"
-          variant="outline"
-          trailing-icon="i-lucide-chevron-down"
-          class="ml-auto"
-          aria-label="Columns select dropdown"
-        />
-      </UDropdownMenu>
+      <UsersAddModal :list-users="listUsers" class="ml-auto" />
     </div>
 
     <UTable
-      :data="data"
+      :data="users"
       :columns="columns"
       ref="table"
       v-model:selected="selectedRows"
+      sticky
+      class="shrink-0 flex-1 max-h-[calc(100vh-19rem)] table-auto text-white"
+      :ui="{
+        base: 'table-fixed border-separate border-spacing-0',
+        thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
+        tbody:
+          '[&>tr:last-child>td:first-child]:rounded-bl-lg [&>tr:last-child>td:last-child]:rounded-br-lg [&>tr:last-child>td]:border-b [&>tr:last-child>td]:border-[#d1d5db]',
+        th: 'py-1 first:rounded-tl-lg last:rounded-tr-lg border-y first:border-l last:border-r bg-[var(--color-venice-blue-800)] text-[#cfd6dd] text-center border border-[#d1d5db] text-[0.88rem] font-semibold',
+        td: 'py-1 border-b first:border-l last:border-r bg-[#aaa] text-[#000] border border-[#d1d5db] text-[0.8rem] text-center',
+      }"
     >
       <template #expanded="{ row }">
         <pre>{{ row.original }}</pre>
       </template>
     </UTable>
-
-    <div class="px-4 py-3.5 text-sm text-muted">
-      {{ selectedRows.length }} of {{ data.length }} row(s) selected.
-    </div>
   </div>
 
-  <UModal
-    v-model:open="open"
-    title="Modal with footer"
-    description="This is useful when you want a form in a Modal."
-    :ui="{ footer: 'justify-end' }"
-  >
-    <UButton label="Open" color="neutral" variant="subtle" />
+  <div class="flex items-center justify-end gap-3 pt-4 mt-auto">
+    <!-- <div class="text-sm text-muted">
+      {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} de
+      {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} fila(s) seleccionada(s).
+    </div> -->
 
-    <template #body>
-      <Placeholder class="h-48" />
-    </template>
-
-    <template #footer="{ close }">
-      <UButton
-        label="Cancel"
-        color="neutral"
-        variant="outline"
-        @click="close"
+    <div class="flex items-center gap-1.5">
+      <UPagination
+        :page="pagination.pageIndex + 1"
+        :items-per-page="pagination.pageSize"
+        :total="totalUsers"
+        @update:page="handlePageChange"
       />
-      <UButton label="Submit" color="neutral" @click="saveChanges" />
-    </template>
-  </UModal>
+    </div>
+  </div>
 </template>

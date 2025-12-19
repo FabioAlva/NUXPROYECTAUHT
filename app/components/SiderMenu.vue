@@ -19,12 +19,12 @@ const items = ref<NavigationMenuItem[][]>([
           to: "/dashboard/proyectos",
         },
         {
-          label: 'Todos los Proyectos',
-          description: 'Visualiza la línea de tiempo y dependencias.',
-          icon: 'i-lucide-calendar-days',
-          to: '/dashboard/proyectos/AllProjects'
-        }
-      ]
+          label: "Todos los Proyectos",
+          description: "Visualiza la línea de tiempo y dependencias.",
+          icon: "i-lucide-calendar-days",
+          to: "/dashboard/proyectos/AllProjects",
+        },
+      ],
     },
     {
       label: "Equipo y Recursos",
@@ -40,7 +40,7 @@ const items = ref<NavigationMenuItem[][]>([
           label: "Carga de Trabajo",
           description: "Monitorea la saturación de tareas por persona.",
           icon: "i-lucide-bar-chart-big",
-          to: "/dashboard/equipo/carga",
+          to: "/dashboard/equipo/Carga",
         },
       ],
     },
@@ -72,17 +72,21 @@ const props = defineProps({
 </script>
 
 <template>
-
-<div 
-  class="h-full bg-[var(--color-venice-blue-800)] flex flex-col transition-all duration-300"
-  :class="props.opened ? 'w-[300px]' : 'w-[70px]'"
->      <UNavigationMenu :collapsed="!props.opened" orientation="vertical" :items="items" class="data-[orientation=vertical]:w-full" :ui="{
-      label: 'text-white',
-      link: 'text-white hover:text-yellow-300',
-      linkLeadingIcon: 'text-white',
-      indicator: 'bg-blue-600'
-    }"
-    
+  <div
+    class="h-full bg-[var(--color-venice-blue-800)] flex flex-col transition-all duration-300"
+    :class="props.opened ? 'w-[300px]' : 'w-[70px]'"
+  >
+    <UNavigationMenu
+      :collapsed="!props.opened"
+      orientation="vertical"
+      :items="items"
+      class="data-[orientation=vertical]:w-full"
+      :ui="{
+        label: 'text-white',
+        link: 'text-white hover:text-yellow-300',
+        linkLeadingIcon: 'text-white',
+        indicator: 'bg-blue-600',
+      }"
     />
   </div>
 </template>

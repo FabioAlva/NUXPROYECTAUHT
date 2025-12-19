@@ -1,9 +1,7 @@
-import { enhance } from '@zenstackhq/runtime';
-import { createEventHandler } from '@zenstackhq/server/nuxt';
-import prisma from '../../utils/prisma'; 
-import { auth } from '../../utils/auth'; 
-
-
+import { enhance } from "@zenstackhq/runtime";
+import { createEventHandler } from "@zenstackhq/server/nuxt";
+import prisma from "../../utils/prisma";
+import { auth } from "../../utils/auth";
 
 /* Configuracion de la Api de zentack 
 * 1.- Debemos importar el prisma que crea el SingelTon (Configuracion de prisma en el Server).
@@ -14,23 +12,18 @@ import { auth } from '../../utils/auth';
 *   3.2 .-  En auth.get.Seccion se obtiene la session y verificamos que la cookie sea valida
 *   3.3 .-  Ahora en enchance prisma el cual envuelve a prisma inyecta el objeto user para evaluar si cumple con las politicas de seguridad
 *   3.4- Por el momento solo le paso el UserId   (Se puede añadir demas campos como rol por ejemplo)
+*   Modificacion: se cambió userId por todo el objeto user para tener mas informacion en las politicas de seguridad
 */
 
-
-
-
 export default createEventHandler({
-    getPrisma: async (event) => {
-        const headers = getRequestHeaders(event);
+  getPrisma: async (event) => {
+    const headers = getRequestHeaders(event);
 
-        const sessionResult = await auth.api.getSession({
-            headers: headers as HeadersInit
-            });
-        return enhance(prisma, {
-            user: sessionResult?.session.userId ? { id: sessionResult.session.userId
-// role: sessionResult.user.role
-
-             } : undefined,
-        });
-    },
+    const sessionResult = await auth.api.getSession({
+      headers: headers as HeadersInit,
+    });
+    return enhance(prisma, {
+      user: sessionResult?.user,
+    });
+  },
 });
