@@ -1,16 +1,17 @@
 import * as z from "zod";
 import type { User } from "~/types";
-import type { TableRow } from "@nuxt/ui";
 
 const userId: any = ref(null);
 const openDialog = ref(false);
 const estado = ref(false);
 const users: any = ref([]);
 const rowSelection = ref({ 1: true });
+
 const pagination = ref({
   pageIndex: 0,
   pageSize: 14,
 });
+
 const statusFilter = ref("all");
 const totalUsers = ref(0);
 const columnFilters = ref([
@@ -75,14 +76,7 @@ export function useAddModal() {
         onSelect() {
           DataEditUser(user);
         },
-      },
-      // {
-      //   label: 'Eliminar usuario',
-      //   icon: 'i-lucide-trash',
-      //   color: 'error',
-      //   onSelect() {
-      //   }
-      // }
+      }
     ];
   }
 

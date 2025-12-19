@@ -1,6 +1,13 @@
+<script setup lang="ts">
+const toaster = { max: 3 }
+</script>
+
+
 <template>
-  <NuxtLayout>
+  <UApp :toaster="toaster">
+<NuxtLayout>
     <NuxtPage />
-    <UNotifications />
   </NuxtLayout>
-  </template>
+</UApp>
+</template>
+  

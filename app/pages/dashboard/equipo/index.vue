@@ -238,11 +238,6 @@ onMounted(async () => {
   </div>
 
   <div class="flex items-center justify-end gap-3 pt-4 mt-auto">
-    <!-- <div class="text-sm text-muted">
-      {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} de
-      {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} fila(s) seleccionada(s).
-    </div> -->
-
     <div class="flex items-center gap-1.5">
       <UPagination
         :page="pagination.pageIndex + 1"
