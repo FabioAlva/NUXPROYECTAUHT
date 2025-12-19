@@ -10,7 +10,6 @@ definePageMeta({
 
 type Status = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'
 
-
 const filters = reactive({
   search: '',
   status: '' 
@@ -57,10 +56,6 @@ const columns = [
     header: 'Nombre',
     class: 'font-medium' 
   },
-  {
-    accessorKey: 'description',
-    header: 'Descripción'
-  },
 {
   accessorKey: 'status',
   header: 'Estado',
@@ -93,32 +88,33 @@ const columns = [
   >
     
     <template #filters>
-      <div class="flex flex-col md:flex-row gap-4 md:items-end">
+   
+      <div class="flex flex-col gap-4">
+        <div class="flex w-full h-full justify-center items-center gap-4">
+        <label>Filtrar por nombre:</label>
 
-        <div class="flex flex-row "> 
-
-      <label>Filtros:</label>
-    
-      <UInput 
-      v-model="filters.search"
+        <UInput 
+        v-model="filters.search"
         icon="i-heroicons-magnifying-glass-20-solid" 
         placeholder="Buscar..." 
         class="w-64" 
-      />
-      
-      <select v-model="filters.status"> 
+        />
+        <label>por estado:</label>
+
+      <select v-model="filters.status" class="bg-white h-[30px] rounded-md p-0 m-0"> 
         <option value="" disabled selected>Filtrar por estado</option>
+        <option value="">Todos</option>
         <option value="PENDING">Pendiente</option>
         <option value="IN_PROGRESS">En curso</option>
         <option value="COMPLETED">Completado</option>
       </select>
 
+    </div>
 
         </div>
       
 
 
-      </div>
 
     </template>
 

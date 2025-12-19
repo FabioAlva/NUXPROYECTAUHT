@@ -10,7 +10,6 @@ import { VueDraggable } from 'vue-draggable-plus'
 
 const {data:allProjects,isloading,error} = useFindManyProject()
 const {mutate: updateProject} = useUpdateProject()
-
 const pendientesList = ref([])
 const enCursoList = ref([])
 const completadosList = ref([])
@@ -22,7 +21,6 @@ watch(allProjects, () => {
     completadosList.value = allProjects.value?.filter(p => p.status === 'COMPLETED') || []
   }
 })
-
 
 const onDrop = (event, newStatus) => {
   const item = event.data
@@ -36,11 +34,15 @@ const onDrop = (event, newStatus) => {
       where: { id: item.id },
       data: { status: newStatus }
   }, {
-      onSuccess: () => console.log('💾 Guardado exitoso en DB'),
-      onError: (e) => alert(e.message)
+      onSuccess: () => {
+        alert('¡Guardado! El estado se actualizó correctamente.')
+      },
+      onError: (e) => {
+        console.error('❌ Error al guardar en DB', e)
+        alert('Error: No se pudo actualizar el estado.')
+      }
   })
 }
-
 
 const isModalOpen = ref(false)
 
